@@ -49,7 +49,7 @@ html, body, [class*="css"] {
 
 /* ── Sidebar ── */
 [data-testid="stSidebar"] {
-    background: #EEEEEE;
+    background: #0B1614;
     border-right: 1px solid #1F3530;
 }
 [data-testid="stSidebar"] .block-container {
@@ -69,19 +69,18 @@ html, body, [class*="css"] {
 
 /* Sidebar file uploader */
 [data-testid="stFileUploader"] {
-    background: #EEEEEE !important;
-    border: 1.5px dashed #1F6F5F !important;
+    background: #132320;
+    border: 1.5px dashed #1F3530;
     border-radius: 12px;
     padding: 1rem;
+    transition: border-color 0.2s;
 }
-
 [data-testid="stFileUploader"]:hover {
-    border-color: #6FCF97 !important;
+    border-color: #6FCF97;
 }
-
-/* text di dalam uploader */
-[data-testid="stFileUploader"] * {
-    color: #1F6F5F !important;
+[data-testid="stFileUploader"] label {
+    color: #A8C4BE !important;
+    font-size: 0.85rem;
 }
 
 /* Sidebar selectbox & sliders */
@@ -422,11 +421,7 @@ def classify_protein(text):
 
 # ===== SIDEBAR =====
 with st.sidebar:
-    st.markdown("""
-<div style="text-align:center; color:#6FCF97; font-size:14px; margin-top:10px;">
-⬅️ Gunakan panel di sebelah kiri untuk upload gambar
-</div>
-""", unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-section">📂 Input</div>', unsafe_allow_html=True)
     uploaded_file = st.file_uploader("Upload label komposisi", type=["jpg", "png", "jpeg"], label_visibility="collapsed")
 
     st.markdown('<div class="sidebar-sep"></div>', unsafe_allow_html=True)
@@ -444,7 +439,7 @@ with st.sidebar:
         scale = st.slider("Scale Factor", 1.0, 3.0, 1.0)
 
     st.markdown('<div class="sidebar-sep"></div>', unsafe_allow_html=True)
-    st.markdown('<div class="sidebar-section">Image Processing</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-section">🎨 Image Processing</div>', unsafe_allow_html=True)
 
     brightness = st.slider("Brightness", -100, 100, 0)
     contrast   = st.slider("Contrast", 1.0, 3.0, 1.0)
@@ -454,7 +449,7 @@ with st.sidebar:
 # ===== HEADER =====
 st.markdown("""
 <div>
-    <div class="hero-badge">Computer Vision · OCR · NLP</div>
+    <div class="hero-badge">🥛 Computer Vision · OCR · NLP</div>
     <h1 class="hero-title">SuProt<span>.</span>Detector</h1>
     <p class="hero-sub">Identifikasi otomatis jenis protein suplemen dari label komposisi menggunakan OCR & Image Processing</p>
 </div>
@@ -504,9 +499,9 @@ if uploaded_file:
         w, h = image.size
         st.markdown(f"""
         <div class="info-strip">
-            <div class="info-chip"><b>{w}×{h}</b> px</div>
-            <div class="info-chip"><b>{file_size} KB</b></div>
-            <div class="info-chip"><b>{operation.capitalize()}</b></div>
+            <div class="info-chip">📐 <b>{w}×{h}</b> px</div>
+            <div class="info-chip">💾 <b>{file_size} KB</b></div>
+            <div class="info-chip">🔄 <b>{operation.capitalize()}</b></div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -520,9 +515,9 @@ if uploaded_file:
         ocr_words = len(text.split())
         st.markdown(f"""
         <div class="info-strip">
-            <div class="info-chip"><b>{ocr_chars}</b> chars</div>
-            <div class="info-chip"><b>{ocr_words}</b> kata</div>
-            <div class="info-chip">Thresh <b>{thresh}</b></div>
+            <div class="info-chip">🔡 <b>{ocr_chars}</b> chars</div>
+            <div class="info-chip">📝 <b>{ocr_words}</b> kata</div>
+            <div class="info-chip">⚡ Thresh <b>{thresh}</b></div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -570,7 +565,7 @@ else:
     # ── Empty State ──
     st.markdown("""
     <div class="empty-state">
-        <div class="empty-icon"></div>
+        <div class="empty-icon">🥛</div>
         <div class="empty-title">Belum ada gambar</div>
         <div class="empty-sub">Upload foto label komposisi suplemen protein dari sidebar untuk memulai analisis OCR otomatis.</div>
     </div>
