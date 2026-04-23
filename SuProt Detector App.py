@@ -433,7 +433,7 @@ button[data-testid="baseButton-headerNoPadding"],
 </style>
 
 <div class="top-credit">
-    Dibuat oleh:<b>Muhammad Aqshal Arrizky</b> — 065123201 — GAB D
+    Dibuat oleh: <b>Muhammad Aqshal Arrizky</b> — 065123201 — GAB D
 </div>
 """, unsafe_allow_html=True)
 
