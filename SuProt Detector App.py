@@ -422,7 +422,11 @@ def classify_protein(text):
 
 # ===== SIDEBAR =====
 with st.sidebar:
-    st.markdown('<div class="sidebar-section">Input</div>', unsafe_allow_html=True)
+    t.markdown("""
+<div style="text-align:center; color:#6FCF97; font-size:14px; margin-top:10px;">
+⬅️ Gunakan panel di sebelah kiri untuk upload gambar
+</div>
+""", unsafe_allow_html=True)
     uploaded_file = st.file_uploader("Upload label komposisi", type=["jpg", "png", "jpeg"], label_visibility="collapsed")
 
     st.markdown('<div class="sidebar-sep"></div>', unsafe_allow_html=True)
