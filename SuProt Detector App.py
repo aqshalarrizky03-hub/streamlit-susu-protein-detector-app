@@ -9,59 +9,364 @@ import re
 st.set_page_config(
     page_title="SuProt Detector",
     layout="wide",
-    page_icon="🥛"
+    page_icon="🥛",
+    initial_sidebar_state="expanded"
 )
 
 # ===== STYLE =====
 st.markdown("""
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+/* ── Reset & Base ── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body, [class*="css"] {
+    font-family: 'DM Sans', sans-serif;
+    background-color: #0A0C10;
+    color: #E8EAF0;
+}
+
+/* ── Hide Streamlit chrome ── */
+#MainMenu, footer, header { visibility: hidden; }
 .block-container {
-    padding-top: 2rem;
+    padding: 2.5rem 3rem 4rem 3rem;
+    max-width: 1300px;
 }
-.card {
-    padding: 20px;
-    border-radius: 15px;
-    background-color: #111827;
-    color: white;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+
+/* ── Sidebar ── */
+[data-testid="stSidebar"] {
+    background: #0D1117;
+    border-right: 1px solid #1C2130;
 }
-.small-text {
-    color: #9CA3AF;
-    font-size: 14px;
+[data-testid="stSidebar"] .block-container {
+    padding: 2rem 1.5rem;
+}
+[data-testid="stSidebar"] h1,
+[data-testid="stSidebar"] h2,
+[data-testid="stSidebar"] h3 {
+    font-family: 'Syne', sans-serif;
+    color: #E8EAF0;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #5B6478;
+    margin-bottom: 1rem;
+}
+
+/* Sidebar file uploader */
+[data-testid="stFileUploader"] {
+    background: #131821;
+    border: 1.5px dashed #2A3245;
+    border-radius: 12px;
+    padding: 1rem;
+    transition: border-color 0.2s;
+}
+[data-testid="stFileUploader"]:hover {
+    border-color: #4ECDC4;
+}
+[data-testid="stFileUploader"] label {
+    color: #9BA3B5 !important;
+    font-size: 0.85rem;
+}
+
+/* Sidebar selectbox & sliders */
+[data-testid="stSelectbox"] > div > div {
+    background: #131821 !important;
+    border: 1px solid #2A3245 !important;
+    border-radius: 8px !important;
+    color: #E8EAF0 !important;
+}
+.stSlider [data-testid="stThumbValue"] {
+    color: #4ECDC4 !important;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+}
+.stSlider > div > div > div > div {
+    background-color: #4ECDC4 !important;
+}
+
+/* ── Header ── */
+.hero-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(78, 205, 196, 0.1);
+    border: 1px solid rgba(78, 205, 196, 0.3);
+    color: #4ECDC4;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.35rem 0.85rem;
+    border-radius: 100px;
+    margin-bottom: 1rem;
+}
+.hero-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: #F0F2F8;
+    margin: 0 0 0.5rem 0;
+    letter-spacing: -0.02em;
+}
+.hero-title span {
+    color: #4ECDC4;
+}
+.hero-sub {
+    color: #5B6478;
+    font-size: 0.95rem;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    margin: 0;
+}
+.hero-divider {
+    height: 1px;
+    background: linear-gradient(to right, #4ECDC4 0%, #1C2130 60%);
+    margin: 2rem 0 2.5rem;
+    border: none;
+}
+
+/* ── Section Labels ── */
+.section-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #5B6478;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #1C2130;
+}
+
+/* ── Image panels ── */
+.img-panel {
+    background: #0D1117;
+    border: 1px solid #1C2130;
+    border-radius: 16px;
+    overflow: hidden;
+}
+.img-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 1.2rem;
+    border-bottom: 1px solid #1C2130;
+}
+.img-panel-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #9BA3B5;
+}
+.img-panel-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #4ECDC4;
+    box-shadow: 0 0 8px #4ECDC4;
+}
+.img-panel-body { padding: 1rem; }
+
+/* ── Result Card ── */
+.result-wrapper {
+    background: linear-gradient(135deg, #0D1117 0%, #111827 100%);
+    border: 1px solid #1C2130;
+    border-radius: 20px;
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+}
+.result-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(to right, #4ECDC4, #45B7D1, #96CEB4);
+}
+.result-type-label {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #5B6478;
+    margin-bottom: 0.5rem;
+}
+.result-type-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 3.5rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    background: linear-gradient(135deg, #4ECDC4 0%, #96CEB4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+}
+.result-desc {
+    color: #5B6478;
+    font-size: 0.85rem;
+    font-weight: 300;
+}
+
+/* ── Score Bars ── */
+.score-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
+    background: #0D1117;
+    border-radius: 10px;
+    border: 1px solid #1C2130;
+}
+.score-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #9BA3B5;
+    min-width: 110px;
+}
+.score-bar-track {
+    flex: 1;
+    height: 6px;
+    background: #1C2130;
+    border-radius: 100px;
+    overflow: hidden;
+}
+.score-bar-fill {
+    height: 100%;
+    border-radius: 100px;
+    transition: width 0.5s ease;
+}
+.score-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #4ECDC4;
+    min-width: 20px;
+    text-align: right;
+}
+
+/* Bar color variants */
+.bar-whey      { background: linear-gradient(to right, #4ECDC4, #45B7D1); }
+.bar-casein    { background: linear-gradient(to right, #96CEB4, #88D8C0); }
+.bar-plant     { background: linear-gradient(to right, #6BCB77, #4ECDC4); }
+.bar-mass_gainer { background: linear-gradient(to right, #FFD166, #F4A261); }
+
+/* ── OCR Output ── */
+.ocr-box {
+    background: #0D1117;
+    border: 1px solid #1C2130;
+    border-radius: 14px;
+    padding: 1.5rem;
+    font-family: 'DM Mono', 'Courier New', monospace;
+    font-size: 0.82rem;
+    color: #7A8499;
+    line-height: 1.8;
+    max-height: 220px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    scrollbar-width: thin;
+    scrollbar-color: #2A3245 transparent;
+}
+
+/* ── Empty State ── */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 5rem 2rem;
+    background: #0D1117;
+    border: 1.5px dashed #1C2130;
+    border-radius: 20px;
+    gap: 1rem;
+}
+.empty-icon {
+    font-size: 3.5rem;
+    filter: grayscale(0.3);
+    opacity: 0.6;
+}
+.empty-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #2A3245;
+}
+.empty-sub {
+    color: #2A3245;
+    font-size: 0.85rem;
+    max-width: 320px;
+    line-height: 1.6;
+}
+
+/* ── Info strip ── */
+.info-strip {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+.info-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #0D1117;
+    border: 1px solid #1C2130;
+    border-radius: 8px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.78rem;
+    color: #5B6478;
+}
+.info-chip b { color: #9BA3B5; }
+
+/* ── Columns gap ── */
+[data-testid="column"] { gap: 0; }
+
+/* Streamlit progress hide default */
+.stProgress { display: none; }
+div.row-widget.stButton > button {
+    display: none;
+}
+
+/* ── Sidebar separator ── */
+.sidebar-sep {
+    height: 1px;
+    background: #1C2130;
+    margin: 1.2rem 0;
+}
+.sidebar-section {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #2A3245;
+    margin: 1.5rem 0 0.75rem;
 }
 </style>
 """, unsafe_allow_html=True)
-
-# ===== TITLE =====
-st.title("🥛 SuProt Detector")
-st.caption("Deteksi jenis protein dari label komposisi menggunakan OCR & Image Processing")
-
-# ===== SIDEBAR =====
-st.sidebar.header("⚙️ Pengaturan")
-
-uploaded_file = st.sidebar.file_uploader("Upload Gambar", type=["jpg","png","jpeg"])
-
-operation = st.sidebar.selectbox(
-    "Operasi Geometri",
-    ["none", "translasi", "rotasi", "scaling"]
-)
-
-if operation == "translasi":
-    tx = st.sidebar.slider("Geser X", -100, 100, 0)
-    ty = st.sidebar.slider("Geser Y", -100, 100, 0)
-
-elif operation == "rotasi":
-    angle = st.sidebar.slider("Rotasi", -180, 180, 0)
-
-elif operation == "scaling":
-    scale = st.sidebar.slider("Scale", 1.0, 3.0, 1.0)
-
-st.sidebar.markdown("---")
-
-brightness = st.sidebar.slider("Brightness", -100, 100, 0)
-contrast = st.sidebar.slider("Contrast", 1.0, 3.0, 1.0)
-thresh = st.sidebar.slider("Threshold", 0, 255, 127)
-blur_k = st.sidebar.slider("Blur", 1, 15, 1)
 
 # ===== KEYWORDS =====
 keywords = {
@@ -71,6 +376,20 @@ keywords = {
     "mass_gainer": ["mass gainer", "weight gainer", "maltodextrin", "high calorie", "carbohydrate"]
 }
 
+PROTEIN_DESCRIPTIONS = {
+    "whey": "Fast-absorbing protein, ideal for post-workout recovery",
+    "casein": "Slow-release protein, optimal for overnight muscle repair",
+    "plant": "Plant-based vegan protein blend detected",
+    "mass_gainer": "High-calorie mass & weight gainer formula"
+}
+
+BAR_COLORS = {
+    "whey": "bar-whey",
+    "casein": "bar-casein",
+    "plant": "bar-plant",
+    "mass_gainer": "bar-mass_gainer"
+}
+
 def preprocess_text(text):
     text = text.lower()
     text = re.sub(r'[^a-z0-9\s]', ' ', text)
@@ -78,41 +397,67 @@ def preprocess_text(text):
 
 def classify_protein(text):
     text = preprocess_text(text)
-    score = {k:0 for k in keywords}
-
+    score = {k: 0 for k in keywords}
     for category, words in keywords.items():
         for word in words:
             if word in text:
                 score[category] += 1
-
     if score["mass_gainer"] > 0:
         score["mass_gainer"] += 2
-
     return max(score, key=score.get), score
+
+# ===== SIDEBAR =====
+with st.sidebar:
+    st.markdown('<div class="sidebar-section">📂 Input</div>', unsafe_allow_html=True)
+    uploaded_file = st.file_uploader("Upload label komposisi", type=["jpg", "png", "jpeg"], label_visibility="collapsed")
+
+    st.markdown('<div class="sidebar-sep"></div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-section">🔧 Geometric Transform</div>', unsafe_allow_html=True)
+
+    operation = st.selectbox("Operasi", ["none", "translasi", "rotasi", "scaling"], label_visibility="collapsed")
+
+    tx, ty, angle, scale = 0, 0, 0, 1.0
+    if operation == "translasi":
+        tx = st.slider("Geser X", -100, 100, 0)
+        ty = st.slider("Geser Y", -100, 100, 0)
+    elif operation == "rotasi":
+        angle = st.slider("Sudut Rotasi", -180, 180, 0)
+    elif operation == "scaling":
+        scale = st.slider("Scale Factor", 1.0, 3.0, 1.0)
+
+    st.markdown('<div class="sidebar-sep"></div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-section">🎨 Image Processing</div>', unsafe_allow_html=True)
+
+    brightness = st.slider("Brightness", -100, 100, 0)
+    contrast   = st.slider("Contrast", 1.0, 3.0, 1.0)
+    thresh     = st.slider("Threshold", 0, 255, 127)
+    blur_k     = st.slider("Blur (Gaussian)", 1, 15, 1)
+
+# ===== HEADER =====
+st.markdown("""
+<div>
+    <div class="hero-badge">🥛 Computer Vision · OCR · NLP</div>
+    <h1 class="hero-title">SuProt<span>.</span>Detector</h1>
+    <p class="hero-sub">Identifikasi otomatis jenis protein suplemen dari label komposisi menggunakan OCR & Image Processing</p>
+</div>
+<hr class="hero-divider">
+""", unsafe_allow_html=True)
 
 # ===== MAIN =====
 if uploaded_file:
     image = Image.open(uploaded_file)
     img = np.array(image)
 
-    col1, col2 = st.columns([1,1])
-
-    with col1:
-        st.subheader("📷 Input")
-        st.image(image, use_column_width=True)
-
-    # ===== PROCESS =====
+    # ── Process ──
     proc_img = img.copy()
     rows, cols = proc_img.shape[:2]
 
     if operation == "translasi":
-        M = np.float32([[1,0,tx],[0,1,ty]])
+        M = np.float32([[1, 0, tx], [0, 1, ty]])
         proc_img = cv2.warpAffine(proc_img, M, (cols, rows))
-
     elif operation == "rotasi":
-        M = cv2.getRotationMatrix2D((cols/2, rows/2), angle, 1)
+        M = cv2.getRotationMatrix2D((cols / 2, rows / 2), angle, 1)
         proc_img = cv2.warpAffine(proc_img, M, (cols, rows))
-
     elif operation == "scaling":
         proc_img = cv2.resize(proc_img, None, fx=scale, fy=scale)
 
@@ -120,40 +465,95 @@ if uploaded_file:
     gray = cv2.cvtColor(proc, cv2.COLOR_RGB2GRAY)
 
     if blur_k > 1:
-        if blur_k % 2 == 0:
-            blur_k += 1
+        blur_k = blur_k if blur_k % 2 != 0 else blur_k + 1
         gray = cv2.GaussianBlur(gray, (blur_k, blur_k), 0)
 
     _, binary = cv2.threshold(gray, thresh, 255, cv2.THRESH_BINARY)
-
     text = pytesseract.image_to_string(binary)
     result, score = classify_protein(text)
 
+    # ── Image Columns ──
+    col1, col2 = st.columns(2, gap="large")
+
+    with col1:
+        st.markdown('<p class="section-label">Original Image</p>', unsafe_allow_html=True)
+        st.markdown('<div class="img-panel"><div class="img-panel-header"><span class="img-panel-title">Input</span><span class="img-panel-dot"></span></div><div class="img-panel-body">', unsafe_allow_html=True)
+        st.image(image, use_column_width=True)
+        st.markdown('</div></div>', unsafe_allow_html=True)
+
+        # File info chips
+        file_size = round(uploaded_file.size / 1024, 1)
+        w, h = image.size
+        st.markdown(f"""
+        <div class="info-strip">
+            <div class="info-chip">📐 <b>{w}×{h}</b> px</div>
+            <div class="info-chip">💾 <b>{file_size} KB</b></div>
+            <div class="info-chip">🔄 <b>{operation.capitalize()}</b></div>
+        </div>
+        """, unsafe_allow_html=True)
+
     with col2:
-        st.subheader("⚙️ Processed")
+        st.markdown('<p class="section-label">Processed Image</p>', unsafe_allow_html=True)
+        st.markdown('<div class="img-panel"><div class="img-panel-header"><span class="img-panel-title">Binary · OCR Ready</span><span class="img-panel-dot" style="background:#F4A261;box-shadow:0 0 8px #F4A261"></span></div><div class="img-panel-body">', unsafe_allow_html=True)
         st.image(binary, use_column_width=True)
+        st.markdown('</div></div>', unsafe_allow_html=True)
 
-    st.markdown("---")
+        ocr_chars = len(text.strip())
+        ocr_words = len(text.split())
+        st.markdown(f"""
+        <div class="info-strip">
+            <div class="info-chip">🔡 <b>{ocr_chars}</b> chars</div>
+            <div class="info-chip">📝 <b>{ocr_words}</b> kata</div>
+            <div class="info-chip">⚡ Thresh <b>{thresh}</b></div>
+        </div>
+        """, unsafe_allow_html=True)
 
-    # ===== HASIL =====
-    st.subheader("📊 Hasil Klasifikasi")
+    st.markdown("<br>", unsafe_allow_html=True)
 
-    st.markdown(f"""
-    <div class="card">
-        <h2>{result.upper()}</h2>
-        <p class="small-text">Kategori protein terdeteksi berdasarkan komposisi</p>
-    </div>
-    """, unsafe_allow_html=True)
+    # ── Results ──
+    res_col, score_col = st.columns([1, 1], gap="large")
 
-    st.markdown("### 🔎 Confidence Score")
-    for k,v in score.items():
-        st.progress(v/5 if v>0 else 0)
-        st.write(f"{k} : {v}")
+    with res_col:
+        st.markdown('<p class="section-label">Hasil Klasifikasi</p>', unsafe_allow_html=True)
+        desc = PROTEIN_DESCRIPTIONS.get(result, "Protein terdeteksi")
+        st.markdown(f"""
+        <div class="result-wrapper">
+            <div class="result-type-label">Protein Type Detected</div>
+            <div class="result-type-value">{result.replace('_', ' ').upper()}</div>
+            <div class="result-desc">{desc}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
-    st.markdown("---")
+    with score_col:
+        st.markdown('<p class="section-label">Confidence Score</p>', unsafe_allow_html=True)
+        max_score = max(score.values()) if max(score.values()) > 0 else 1
+        for k, v in score.items():
+            bar_pct = int((v / 5) * 100)
+            bar_class = BAR_COLORS.get(k, "bar-whey")
+            label = k.replace("_", " ").title()
+            st.markdown(f"""
+            <div class="score-row">
+                <div class="score-label">{label}</div>
+                <div class="score-bar-track">
+                    <div class="score-bar-fill {bar_class}" style="width:{bar_pct}%"></div>
+                </div>
+                <div class="score-num">{v}</div>
+            </div>
+            """, unsafe_allow_html=True)
 
-    st.subheader("📝 Hasil OCR")
-    st.text_area("Extracted Text", text, height=200)
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # ── OCR Output ──
+    st.markdown('<p class="section-label">Extracted OCR Text</p>', unsafe_allow_html=True)
+    clean_text = text.strip() if text.strip() else "Tidak ada teks terdeteksi. Coba sesuaikan parameter Threshold atau Contrast."
+    st.markdown(f'<div class="ocr-box">{clean_text}</div>', unsafe_allow_html=True)
 
 else:
-    st.info("Silakan upload gambar terlebih dahulu dari sidebar.")
+    # ── Empty State ──
+    st.markdown("""
+    <div class="empty-state">
+        <div class="empty-icon">🥛</div>
+        <div class="empty-title">Belum ada gambar</div>
+        <div class="empty-sub">Upload foto label komposisi suplemen protein dari sidebar untuk memulai analisis OCR otomatis.</div>
+    </div>
+    """, unsafe_allow_html=True)
