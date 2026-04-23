@@ -22,7 +22,7 @@ st.markdown("""
 
 html, body, [class*="css"] {
     font-family: 'DM Sans', sans-serif;
-    background-color: #111827;
+    background-color: #1F6F5F;
     color: #E8EAF0;
 }
 
