@@ -13,6 +13,35 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# ===== FORCE SIDEBAR OPEN via JavaScript =====
+# Inject JS to click the sidebar toggle button if sidebar is collapsed
+st.markdown("""
+<script>
+    // Wait for Streamlit to fully render, then ensure sidebar is expanded
+    function expandSidebar() {
+        // Try to find and click the sidebar expand button if collapsed
+        const buttons = window.parent.document.querySelectorAll('button[kind="header"]');
+        buttons.forEach(btn => {
+            const ariaLabel = btn.getAttribute('aria-label') || '';
+            if (ariaLabel.toLowerCase().includes('open') || ariaLabel.toLowerCase().includes('show')) {
+                btn.click();
+            }
+        });
+
+        // Also try by data-testid
+        const collapseBtn = window.parent.document.querySelector('[data-testid="collapsedControl"]');
+        if (collapseBtn) {
+            collapseBtn.click();
+        }
+    }
+    
+    // Run after a short delay to ensure DOM is ready
+    setTimeout(expandSidebar, 300);
+    setTimeout(expandSidebar, 800);
+    setTimeout(expandSidebar, 1500);
+</script>
+""", unsafe_allow_html=True)
+
 # ===== STYLE =====
 st.markdown("""
 <style>
@@ -45,23 +74,103 @@ html, body, [class*="css"] {
     max-width: 1300px;
 }
 
-/* ── SIDEBAR ── */
+/* ── SIDEBAR — fully forced open & styled ── */
 section[data-testid="stSidebar"] {
     background-color: #0B1614 !important;
     border-right: 1px solid #1F3530 !important;
-    min-width: 280px !important;
+    width: 300px !important;
+    min-width: 300px !important;
+    max-width: 300px !important;
+    transform: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    transition: none !important;
 }
+
+/* Force the inner wrapper visible */
+section[data-testid="stSidebar"] > div:first-child {
+    width: 300px !important;
+    min-width: 300px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: none !important;
+}
+
 section[data-testid="stSidebar"] .block-container {
     padding: 2rem 1.5rem !important;
+    width: 100% !important;
+    visibility: visible !important;
 }
-section[data-testid="stSidebar"] label {
+
+/* All sidebar children must be visible */
+section[data-testid="stSidebar"],
+section[data-testid="stSidebar"] *,
+section[data-testid="stSidebar"] > *,
+section[data-testid="stSidebar"] > div,
+section[data-testid="stSidebar"] > div > * {
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Sidebar text */
+section[data-testid="stSidebar"] label,
+section[data-testid="stSidebar"] p,
+section[data-testid="stSidebar"] span:not([data-testid="collapsedControl"]) {
     color: #A8C4BE !important;
 }
-section[data-testid="stSidebar"] p {
-    color: #A8C4BE !important;
+
+/* Sidebar file uploader */
+section[data-testid="stSidebar"] [data-testid="stFileUploader"] {
+    background: #132320 !important;
+    border: 1.5px dashed #1F6F5F !important;
+    border-radius: 12px !important;
+    padding: 0.75rem !important;
 }
+section[data-testid="stSidebar"] [data-testid="stFileUploadDropzone"] {
+    background: rgba(31,111,95,0.08) !important;
+    border: 1px dashed #1F3530 !important;
+    border-radius: 8px !important;
+}
+section[data-testid="stSidebar"] [data-testid="stFileUploadDropzone"]:hover {
+    border-color: #6FCF97 !important;
+}
+section[data-testid="stSidebar"] [data-testid="stFileUploadDropzone"] button,
+section[data-testid="stSidebar"] [data-testid="stFileUploader"] button {
+    background-color: #1F6F5F !important;
+    color: #EEEEEE !important;
+    border: none !important;
+    border-radius: 6px !important;
+}
+section[data-testid="stSidebar"] [data-testid="stFileUploadDropzone"] button:hover,
+section[data-testid="stSidebar"] [data-testid="stFileUploader"] button:hover {
+    background-color: #6FCF97 !important;
+    color: #0E1A18 !important;
+}
+
+/* Sidebar selectbox */
+section[data-testid="stSidebar"] [data-testid="stSelectbox"] > div > div {
+    background: #132320 !important;
+    border: 1px solid #1F3530 !important;
+    border-radius: 8px !important;
+    color: #EEEEEE !important;
+}
+
+/* Sidebar sliders */
 section[data-testid="stSidebar"] .stSlider > div > div > div > div {
     background-color: #1F6F5F !important;
+}
+section[data-testid="stSidebar"] [data-testid="stThumbValue"] {
+    color: #6FCF97 !important;
+}
+
+/* Hide the collapse arrow button to prevent accidental collapse */
+button[data-testid="baseButton-headerNoPadding"],
+[data-testid="collapsedControl"] {
+    display: none !important;
 }
 
 /* ── HERO ── */
@@ -101,80 +210,6 @@ section[data-testid="stSidebar"] .stSlider > div > div > div > div {
     background: linear-gradient(to right, #1F6F5F 0%, #0E1A18 60%);
     margin: 1.5rem 0 2rem;
     border: none;
-}
-
-/* ── UPLOAD ZONE (main area) ── */
-.upload-zone-wrap {
-    background: #132320;
-    border: 2px dashed #1F6F5F;
-    border-radius: 16px;
-    padding: 2rem 2rem 1rem 2rem;
-    margin-bottom: 2rem;
-    transition: border-color 0.2s;
-}
-.upload-zone-wrap:hover {
-    border-color: #6FCF97;
-}
-.upload-zone-label {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: #6FCF97;
-    margin-bottom: 0.75rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-/* Override Streamlit file uploader inside our zone */
-.upload-zone-wrap [data-testid="stFileUploader"] {
-    background: transparent !important;
-    border: none !important;
-    padding: 0 !important;
-}
-.upload-zone-wrap [data-testid="stFileUploadDropzone"] {
-    background: rgba(31,111,95,0.08) !important;
-    border: 1.5px dashed #1F3530 !important;
-    border-radius: 10px !important;
-}
-.upload-zone-wrap [data-testid="stFileUploadDropzone"]:hover {
-    border-color: #6FCF97 !important;
-    background: rgba(111,207,151,0.06) !important;
-}
-.upload-zone-wrap [data-testid="stFileUploadDropzone"] button {
-    background: #1F6F5F !important;
-    color: #EEEEEE !important;
-    border: none !important;
-    border-radius: 8px !important;
-}
-.upload-zone-wrap [data-testid="stFileUploadDropzone"] button:hover {
-    background: #6FCF97 !important;
-    color: #0E1A18 !important;
-}
-
-/* ── SETTINGS ROW ── */
-.settings-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
-.settings-card {
-    background: #132320;
-    border: 1px solid #1F3530;
-    border-radius: 12px;
-    padding: 1rem 1.2rem;
-}
-.settings-card-label {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: #3D6B60;
-    margin-bottom: 0.5rem;
 }
 
 /* ── SECTION LABELS ── */
@@ -235,7 +270,6 @@ section[data-testid="stSidebar"] .stSlider > div > div > div > div {
     padding: 2.5rem;
     position: relative;
     overflow: hidden;
-    height: 100%;
 }
 .result-wrapper::before {
     content: '';
@@ -352,6 +386,33 @@ section[data-testid="stSidebar"] .stSlider > div > div > div > div {
 }
 .info-chip b { color: #A8C4BE; }
 
+/* ── EMPTY STATE ── */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 5rem 2rem;
+    background: #132320;
+    border: 1.5px dashed #1F3530;
+    border-radius: 20px;
+    gap: 1rem;
+}
+.empty-icon { font-size: 3.5rem; opacity: 0.4; }
+.empty-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1F6F5F;
+}
+.empty-sub {
+    color: #3D6B60;
+    font-size: 0.85rem;
+    max-width: 320px;
+    line-height: 1.6;
+}
+
 /* ── SIDEBAR SECTION LABELS ── */
 .sb-label {
     font-family: 'Syne', sans-serif;
@@ -360,7 +421,7 @@ section[data-testid="stSidebar"] .stSlider > div > div > div > div {
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: #6FCF97;
-    margin: 1.5rem 0 0.6rem;
+    margin: 1.5rem 0 0.75rem;
     padding-bottom: 0.4rem;
     border-bottom: 1px solid #1F3530;
 }
@@ -404,8 +465,16 @@ def classify_protein(text):
         score["mass_gainer"] += 2
     return max(score, key=score.get), score
 
-# ===== SIDEBAR (secondary controls only) =====
+# ===== SIDEBAR =====
 with st.sidebar:
+    st.markdown('<div class="sb-label">📂 Upload Gambar</div>', unsafe_allow_html=True)
+    uploaded_file = st.file_uploader(
+        "Upload label komposisi",
+        type=["jpg", "png", "jpeg"],
+        help="Foto label nutrisi / komposisi produk protein suplemen"
+    )
+
+    st.markdown('<div class="sb-sep"></div>', unsafe_allow_html=True)
     st.markdown('<div class="sb-label">🔧 Geometric Transform</div>', unsafe_allow_html=True)
     operation = st.selectbox("Pilih Operasi", ["none", "translasi", "rotasi", "scaling"])
     tx, ty, angle, scale = 0, 0, 0, 1.0
@@ -434,26 +503,11 @@ st.markdown("""
 <hr class="hero-divider">
 """, unsafe_allow_html=True)
 
-# ===== UPLOAD — di main area, selalu terlihat =====
-st.markdown("""
-<div class="upload-zone-label">📂 Upload Label Komposisi</div>
-""", unsafe_allow_html=True)
-
-with st.container():
-    st.markdown('<div class="upload-zone-wrap">', unsafe_allow_html=True)
-    uploaded_file = st.file_uploader(
-        "Drag & drop atau klik untuk memilih gambar",
-        type=["jpg", "png", "jpeg"],
-        label_visibility="visible"
-    )
-    st.markdown('</div>', unsafe_allow_html=True)
-
 # ===== MAIN =====
 if uploaded_file:
     image = Image.open(uploaded_file)
     img   = np.array(image)
 
-    # ── Transform ──
     proc_img   = img.copy()
     rows, cols = proc_img.shape[:2]
     if operation == "translasi":
@@ -474,7 +528,6 @@ if uploaded_file:
     text          = pytesseract.image_to_string(binary)
     result, score = classify_protein(text)
 
-    # ── Images ──
     col1, col2 = st.columns(2, gap="large")
     with col1:
         st.markdown('<p class="section-label">Original Image</p>', unsafe_allow_html=True)
@@ -482,7 +535,7 @@ if uploaded_file:
         st.image(image, use_column_width=True)
         st.markdown('</div></div>', unsafe_allow_html=True)
         file_size = round(uploaded_file.size / 1024, 1)
-        w, h      = image.size
+        w, h = image.size
         st.markdown(f'<div class="info-strip"><div class="info-chip">📐 <b>{w}×{h}</b> px</div><div class="info-chip">💾 <b>{file_size} KB</b></div><div class="info-chip">🔄 <b>{operation.capitalize()}</b></div></div>', unsafe_allow_html=True)
 
     with col2:
@@ -496,7 +549,6 @@ if uploaded_file:
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # ── Results ──
     res_col, score_col = st.columns([1, 1], gap="large")
     with res_col:
         st.markdown('<p class="section-label">Hasil Klasifikasi</p>', unsafe_allow_html=True)
@@ -512,8 +564,15 @@ if uploaded_file:
             st.markdown(f'<div class="score-row"><div class="score-label">{label}</div><div class="score-bar-track"><div class="score-bar-fill {cls}" style="width:{pct}%"></div></div><div class="score-num">{v}</div></div>', unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
-
-    # ── OCR ──
     st.markdown('<p class="section-label">Extracted OCR Text</p>', unsafe_allow_html=True)
     clean_text = text.strip() or "Tidak ada teks terdeteksi. Coba sesuaikan Threshold atau Contrast di sidebar."
     st.markdown(f'<div class="ocr-box">{clean_text}</div>', unsafe_allow_html=True)
+
+else:
+    st.markdown("""
+    <div class="empty-state">
+        <div class="empty-icon">🥛</div>
+        <div class="empty-title">Belum ada gambar</div>
+        <div class="empty-sub">Upload foto label komposisi dari <b style="color:#6FCF97">sidebar kiri ← </b> untuk memulai analisis OCR otomatis.</div>
+    </div>
+    """, unsafe_allow_html=True)
