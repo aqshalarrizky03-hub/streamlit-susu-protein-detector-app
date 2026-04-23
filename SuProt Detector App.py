@@ -49,7 +49,7 @@ html, body, [class*="css"] {
 
 /* ── Sidebar ── */
 [data-testid="stSidebar"] {
-    background: #0B1614;
+    background: #EEEEEE;
     border-right: 1px solid #1F3530;
 }
 [data-testid="stSidebar"] .block-container {
