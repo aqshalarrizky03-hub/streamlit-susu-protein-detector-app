@@ -9,7 +9,6 @@ import re
 st.set_page_config(
     page_title="SuProt Detector",
     layout="wide",
-    page_icon="🥛",
     initial_sidebar_state="expanded"
 )
 
@@ -408,11 +407,11 @@ def classify_protein(text):
 
 # ===== SIDEBAR =====
 with st.sidebar:
-    st.markdown('<div class="sidebar-section">📂 Input</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-section">Input</div>', unsafe_allow_html=True)
     uploaded_file = st.file_uploader("Upload label komposisi", type=["jpg", "png", "jpeg"], label_visibility="collapsed")
 
     st.markdown('<div class="sidebar-sep"></div>', unsafe_allow_html=True)
-    st.markdown('<div class="sidebar-section">🔧 Geometric Transform</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-section">Geometric Transform</div>', unsafe_allow_html=True)
 
     operation = st.selectbox("Operasi", ["none", "translasi", "rotasi", "scaling"], label_visibility="collapsed")
 
@@ -426,7 +425,7 @@ with st.sidebar:
         scale = st.slider("Scale Factor", 1.0, 3.0, 1.0)
 
     st.markdown('<div class="sidebar-sep"></div>', unsafe_allow_html=True)
-    st.markdown('<div class="sidebar-section">🎨 Image Processing</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-section">Image Processing</div>', unsafe_allow_html=True)
 
     brightness = st.slider("Brightness", -100, 100, 0)
     contrast   = st.slider("Contrast", 1.0, 3.0, 1.0)
@@ -436,7 +435,7 @@ with st.sidebar:
 # ===== HEADER =====
 st.markdown("""
 <div>
-    <div class="hero-badge">🥛 Computer Vision · OCR · NLP</div>
+    <div class="hero-badge">Computer Vision · OCR · NLP</div>
     <h1 class="hero-title">SuProt<span>.</span>Detector</h1>
     <p class="hero-sub">Identifikasi otomatis jenis protein suplemen dari label komposisi menggunakan OCR & Image Processing</p>
 </div>
@@ -486,9 +485,9 @@ if uploaded_file:
         w, h = image.size
         st.markdown(f"""
         <div class="info-strip">
-            <div class="info-chip">📐 <b>{w}×{h}</b> px</div>
-            <div class="info-chip">💾 <b>{file_size} KB</b></div>
-            <div class="info-chip">🔄 <b>{operation.capitalize()}</b></div>
+            <div class="info-chip"><b>{w}×{h}</b> px</div>
+            <div class="info-chip"><b>{file_size} KB</b></div>
+            <div class="info-chip"><b>{operation.capitalize()}</b></div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -502,9 +501,9 @@ if uploaded_file:
         ocr_words = len(text.split())
         st.markdown(f"""
         <div class="info-strip">
-            <div class="info-chip">🔡 <b>{ocr_chars}</b> chars</div>
-            <div class="info-chip">📝 <b>{ocr_words}</b> kata</div>
-            <div class="info-chip">⚡ Thresh <b>{thresh}</b></div>
+            <div class="info-chip"><b>{ocr_chars}</b> chars</div>
+            <div class="info-chip"><b>{ocr_words}</b> kata</div>
+            <div class="info-chip">Thresh <b>{thresh}</b></div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -552,7 +551,7 @@ else:
     # ── Empty State ──
     st.markdown("""
     <div class="empty-state">
-        <div class="empty-icon">🥛</div>
+        <div class="empty-icon"></div>
         <div class="empty-title">Belum ada gambar</div>
         <div class="empty-sub">Upload foto label komposisi suplemen protein dari sidebar untuk memulai analisis OCR otomatis.</div>
     </div>
