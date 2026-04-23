@@ -475,7 +475,7 @@ with st.sidebar:
     )
 
     st.markdown('<div class="sb-sep"></div>', unsafe_allow_html=True)
-    st.markdown('<div class="sb-label">🔧 Geometric Transform</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sb-label">Geometric Transform</div>', unsafe_allow_html=True)
     operation = st.selectbox("Pilih Operasi", ["none", "translasi", "rotasi", "scaling"])
     tx, ty, angle, scale = 0, 0, 0, 1.0
     if operation == "translasi":
