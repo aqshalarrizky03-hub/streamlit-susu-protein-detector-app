@@ -69,18 +69,19 @@ html, body, [class*="css"] {
 
 /* Sidebar file uploader */
 [data-testid="stFileUploader"] {
-    background: #132320;
-    border: 1.5px dashed #1F3530;
+    background: #EEEEEE !important;
+    border: 1.5px dashed #1F6F5F !important;
     border-radius: 12px;
     padding: 1rem;
-    transition: border-color 0.2s;
 }
+
 [data-testid="stFileUploader"]:hover {
-    border-color: #6FCF97;
+    border-color: #6FCF97 !important;
 }
-[data-testid="stFileUploader"] label {
-    color: #A8C4BE !important;
-    font-size: 0.85rem;
+
+/* text di dalam uploader */
+[data-testid="stFileUploader"] * {
+    color: #1F6F5F !important;
 }
 
 /* Sidebar selectbox & sliders */
