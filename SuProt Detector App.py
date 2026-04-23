@@ -487,7 +487,7 @@ with st.sidebar:
         scale = st.slider("Scale Factor", 1.0, 3.0, 1.0)
 
     st.markdown('<div class="sb-sep"></div>', unsafe_allow_html=True)
-    st.markdown('<div class="sb-label">🎨 Image Processing</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sb-label">Image Processing</div>', unsafe_allow_html=True)
     brightness = st.slider("Brightness", -100, 100, 0)
     contrast   = st.slider("Contrast",   1.0, 3.0, 1.0)
     thresh     = st.slider("Threshold",  0, 255, 127)
@@ -496,7 +496,7 @@ with st.sidebar:
 # ===== HEADER =====
 st.markdown("""
 <div>
-    <div class="hero-badge">🥛 Computer Vision · OCR · NLP</div>
+    <div class="hero-badge">Computer Vision · OCR · NLP</div>
     <h1 class="hero-title">SuProt<span>.</span>Detector</h1>
     <p class="hero-sub">Identifikasi otomatis jenis protein suplemen dari label komposisi menggunakan OCR & Image Processing</p>
 </div>
@@ -536,7 +536,7 @@ if uploaded_file:
         st.markdown('</div></div>', unsafe_allow_html=True)
         file_size = round(uploaded_file.size / 1024, 1)
         w, h = image.size
-        st.markdown(f'<div class="info-strip"><div class="info-chip">📐 <b>{w}×{h}</b> px</div><div class="info-chip">💾 <b>{file_size} KB</b></div><div class="info-chip">🔄 <b>{operation.capitalize()}</b></div></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="info-strip"><div class="info-chip"><b>{w}×{h}</b> px</div><div class="info-chip"><b>{file_size} KB</b></div><div class="info-chip"><b>{operation.capitalize()}</b></div></div>', unsafe_allow_html=True)
 
     with col2:
         st.markdown('<p class="section-label">Processed Image</p>', unsafe_allow_html=True)
@@ -545,7 +545,7 @@ if uploaded_file:
         st.markdown('</div></div>', unsafe_allow_html=True)
         ocr_chars = len(text.strip())
         ocr_words = len(text.split())
-        st.markdown(f'<div class="info-strip"><div class="info-chip">🔡 <b>{ocr_chars}</b> chars</div><div class="info-chip">📝 <b>{ocr_words}</b> kata</div><div class="info-chip">⚡ Thresh <b>{thresh}</b></div></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="info-strip"><div class="info-chip"><b>{ocr_chars}</b> chars</div><div class="info-chip"><b>{ocr_words}</b> kata</div><div class="info-chip">Thresh <b>{thresh}</b></div></div>', unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
@@ -571,7 +571,7 @@ if uploaded_file:
 else:
     st.markdown("""
     <div class="empty-state">
-        <div class="empty-icon">🥛</div>
+        <div class="empty-icon"></div>
         <div class="empty-title">Belum ada gambar</div>
         <div class="empty-sub">Upload foto label komposisi dari <b style="color:#6FCF97">sidebar kiri ← </b> untuk memulai analisis OCR otomatis.</div>
     </div>
