@@ -9,6 +9,7 @@ import re
 st.set_page_config(
     page_title="SuProt Detector",
     layout="wide",
+    page_icon="🥛",
     initial_sidebar_state="expanded"
 )
 
@@ -17,13 +18,26 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
+/*
+  COLOR PALETTE
+  --green-dark  : #1F6F5F  (primary brand, deep forest green)
+  --green-light : #6FCF97  (accent, fresh mint green)
+  --cream       : #EEEEEE  (text / surface light)
+  -- derived --
+  --bg          : #0E1A18  (very dark tinted green-black)
+  --panel       : #132320  (dark green panel)
+  --border      : #1F3530  (subtle green-tinted border)
+  --muted       : #3D6B60  (muted green-grey)
+  --soft-text   : #A8C4BE  (soft readable text)
+*/
+
 /* ── Reset & Base ── */
 *, *::before, *::after { box-sizing: border-box; }
 
 html, body, [class*="css"] {
     font-family: 'DM Sans', sans-serif;
-    background-color: #1F6F5F;
-    color: #E8EAF0;
+    background-color: #0E1A18;
+    color: #EEEEEE;
 }
 
 /* ── Hide Streamlit chrome ── */
@@ -35,8 +49,8 @@ html, body, [class*="css"] {
 
 /* ── Sidebar ── */
 [data-testid="stSidebar"] {
-    background: #0D1117;
-    border-right: 1px solid #1C2130;
+    background: #0B1614;
+    border-right: 1px solid #1F3530;
 }
 [data-testid="stSidebar"] .block-container {
     padding: 2rem 1.5rem;
@@ -45,44 +59,44 @@ html, body, [class*="css"] {
 [data-testid="stSidebar"] h2,
 [data-testid="stSidebar"] h3 {
     font-family: 'Syne', sans-serif;
-    color: #E8EAF0;
+    color: #EEEEEE;
     font-size: 0.8rem;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: #5B6478;
+    color: #3D6B60;
     margin-bottom: 1rem;
 }
 
 /* Sidebar file uploader */
 [data-testid="stFileUploader"] {
-    background: #131821;
-    border: 1.5px dashed #2A3245;
+    background: #132320;
+    border: 1.5px dashed #1F3530;
     border-radius: 12px;
     padding: 1rem;
     transition: border-color 0.2s;
 }
 [data-testid="stFileUploader"]:hover {
-    border-color: #4ECDC4;
+    border-color: #6FCF97;
 }
 [data-testid="stFileUploader"] label {
-    color: #9BA3B5 !important;
+    color: #A8C4BE !important;
     font-size: 0.85rem;
 }
 
 /* Sidebar selectbox & sliders */
 [data-testid="stSelectbox"] > div > div {
-    background: #131821 !important;
-    border: 1px solid #2A3245 !important;
+    background: #132320 !important;
+    border: 1px solid #1F3530 !important;
     border-radius: 8px !important;
-    color: #E8EAF0 !important;
+    color: #EEEEEE !important;
 }
 .stSlider [data-testid="stThumbValue"] {
-    color: #4ECDC4 !important;
+    color: #6FCF97 !important;
     font-family: 'DM Sans', sans-serif;
     font-weight: 500;
 }
 .stSlider > div > div > div > div {
-    background-color: #4ECDC4 !important;
+    background-color: #1F6F5F !important;
 }
 
 /* ── Header ── */
@@ -96,9 +110,9 @@ html, body, [class*="css"] {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    background: rgba(78, 205, 196, 0.1);
-    border: 1px solid rgba(78, 205, 196, 0.3);
-    color: #4ECDC4;
+    background: rgba(31, 111, 95, 0.2);
+    border: 1px solid rgba(111, 207, 151, 0.35);
+    color: #6FCF97;
     font-size: 0.72rem;
     font-weight: 500;
     letter-spacing: 0.12em;
@@ -112,15 +126,15 @@ html, body, [class*="css"] {
     font-size: 3rem;
     font-weight: 800;
     line-height: 1.1;
-    color: #F0F2F8;
+    color: #EEEEEE;
     margin: 0 0 0.5rem 0;
     letter-spacing: -0.02em;
 }
 .hero-title span {
-    color: #4ECDC4;
+    color: #6FCF97;
 }
 .hero-sub {
-    color: #5B6478;
+    color: #3D6B60;
     font-size: 0.95rem;
     font-weight: 300;
     letter-spacing: 0.02em;
@@ -128,7 +142,7 @@ html, body, [class*="css"] {
 }
 .hero-divider {
     height: 1px;
-    background: linear-gradient(to right, #4ECDC4 0%, #1C2130 60%);
+    background: linear-gradient(to right, #1F6F5F 0%, #0E1A18 60%);
     margin: 2rem 0 2.5rem;
     border: none;
 }
@@ -140,7 +154,7 @@ html, body, [class*="css"] {
     font-weight: 700;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: #5B6478;
+    color: #3D6B60;
     margin-bottom: 0.75rem;
     display: flex;
     align-items: center;
@@ -150,13 +164,13 @@ html, body, [class*="css"] {
     content: '';
     flex: 1;
     height: 1px;
-    background: #1C2130;
+    background: #1F3530;
 }
 
 /* ── Image panels ── */
 .img-panel {
-    background: #0D1117;
-    border: 1px solid #1C2130;
+    background: #132320;
+    border: 1px solid #1F3530;
     border-radius: 16px;
     overflow: hidden;
 }
@@ -165,7 +179,7 @@ html, body, [class*="css"] {
     align-items: center;
     justify-content: space-between;
     padding: 0.85rem 1.2rem;
-    border-bottom: 1px solid #1C2130;
+    border-bottom: 1px solid #1F3530;
 }
 .img-panel-title {
     font-family: 'Syne', sans-serif;
@@ -173,20 +187,20 @@ html, body, [class*="css"] {
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: #9BA3B5;
+    color: #A8C4BE;
 }
 .img-panel-dot {
     width: 8px; height: 8px;
     border-radius: 50%;
-    background: #4ECDC4;
-    box-shadow: 0 0 8px #4ECDC4;
+    background: #6FCF97;
+    box-shadow: 0 0 8px #6FCF97;
 }
 .img-panel-body { padding: 1rem; }
 
 /* ── Result Card ── */
 .result-wrapper {
-    background: linear-gradient(135deg, #0D1117 0%, #111827 100%);
-    border: 1px solid #1C2130;
+    background: linear-gradient(135deg, #132320 0%, #1A3530 100%);
+    border: 1px solid #1F3530;
     border-radius: 20px;
     padding: 2.5rem;
     position: relative;
@@ -197,14 +211,14 @@ html, body, [class*="css"] {
     position: absolute;
     top: 0; left: 0; right: 0;
     height: 3px;
-    background: linear-gradient(to right, #4ECDC4, #45B7D1, #96CEB4);
+    background: linear-gradient(to right, #1F6F5F, #6FCF97, #EEEEEE);
 }
 .result-type-label {
     font-size: 0.72rem;
     font-weight: 500;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: #5B6478;
+    color: #3D6B60;
     margin-bottom: 0.5rem;
 }
 .result-type-value {
@@ -213,14 +227,14 @@ html, body, [class*="css"] {
     font-weight: 800;
     letter-spacing: -0.03em;
     line-height: 1;
-    background: linear-gradient(135deg, #4ECDC4 0%, #96CEB4 100%);
+    background: linear-gradient(135deg, #6FCF97 0%, #EEEEEE 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     margin-bottom: 0.5rem;
 }
 .result-desc {
-    color: #5B6478;
+    color: #A8C4BE;
     font-size: 0.85rem;
     font-weight: 300;
 }
@@ -232,9 +246,9 @@ html, body, [class*="css"] {
     gap: 1rem;
     margin-bottom: 1rem;
     padding: 0.75rem 1rem;
-    background: #0D1117;
+    background: #132320;
     border-radius: 10px;
-    border: 1px solid #1C2130;
+    border: 1px solid #1F3530;
 }
 .score-label {
     font-family: 'Syne', sans-serif;
@@ -242,13 +256,13 @@ html, body, [class*="css"] {
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #9BA3B5;
+    color: #A8C4BE;
     min-width: 110px;
 }
 .score-bar-track {
     flex: 1;
     height: 6px;
-    background: #1C2130;
+    background: #1F3530;
     border-radius: 100px;
     overflow: hidden;
 }
@@ -261,32 +275,32 @@ html, body, [class*="css"] {
     font-family: 'Syne', sans-serif;
     font-size: 0.85rem;
     font-weight: 700;
-    color: #4ECDC4;
+    color: #6FCF97;
     min-width: 20px;
     text-align: right;
 }
 
-/* Bar color variants */
-.bar-whey      { background: linear-gradient(to right, #4ECDC4, #45B7D1); }
-.bar-casein    { background: linear-gradient(to right, #96CEB4, #88D8C0); }
-.bar-plant     { background: linear-gradient(to right, #6BCB77, #4ECDC4); }
-.bar-mass_gainer { background: linear-gradient(to right, #FFD166, #F4A261); }
+/* Bar color variants — all derived from the 3-color palette */
+.bar-whey        { background: linear-gradient(to right, #1F6F5F, #6FCF97); }
+.bar-casein      { background: linear-gradient(to right, #2A8A70, #EEEEEE); }
+.bar-plant       { background: linear-gradient(to right, #6FCF97, #EEEEEE); }
+.bar-mass_gainer { background: linear-gradient(to right, #1F6F5F, #A8C4BE); }
 
 /* ── OCR Output ── */
 .ocr-box {
-    background: #0D1117;
-    border: 1px solid #1C2130;
+    background: #132320;
+    border: 1px solid #1F3530;
     border-radius: 14px;
     padding: 1.5rem;
     font-family: 'DM Mono', 'Courier New', monospace;
     font-size: 0.82rem;
-    color: #7A8499;
+    color: #A8C4BE;
     line-height: 1.8;
     max-height: 220px;
     overflow-y: auto;
     white-space: pre-wrap;
     scrollbar-width: thin;
-    scrollbar-color: #2A3245 transparent;
+    scrollbar-color: #1F6F5F transparent;
 }
 
 /* ── Empty State ── */
@@ -297,8 +311,8 @@ html, body, [class*="css"] {
     justify-content: center;
     text-align: center;
     padding: 5rem 2rem;
-    background: #0D1117;
-    border: 1.5px dashed #1C2130;
+    background: #132320;
+    border: 1.5px dashed #1F3530;
     border-radius: 20px;
     gap: 1rem;
 }
@@ -311,10 +325,10 @@ html, body, [class*="css"] {
     font-family: 'Syne', sans-serif;
     font-size: 1.25rem;
     font-weight: 700;
-    color: #2A3245;
+    color: #1F6F5F;
 }
 .empty-sub {
-    color: #2A3245;
+    color: #3D6B60;
     font-size: 0.85rem;
     max-width: 320px;
     line-height: 1.6;
@@ -331,14 +345,14 @@ html, body, [class*="css"] {
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    background: #0D1117;
-    border: 1px solid #1C2130;
+    background: #132320;
+    border: 1px solid #1F3530;
     border-radius: 8px;
     padding: 0.4rem 0.8rem;
     font-size: 0.78rem;
-    color: #5B6478;
+    color: #3D6B60;
 }
-.info-chip b { color: #9BA3B5; }
+.info-chip b { color: #A8C4BE; }
 
 /* ── Columns gap ── */
 [data-testid="column"] { gap: 0; }
@@ -352,7 +366,7 @@ div.row-widget.stButton > button {
 /* ── Sidebar separator ── */
 .sidebar-sep {
     height: 1px;
-    background: #1C2130;
+    background: #1F3530;
     margin: 1.2rem 0;
 }
 .sidebar-section {
@@ -361,7 +375,7 @@ div.row-widget.stButton > button {
     font-weight: 700;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: #2A3245;
+    color: #3D6B60;
     margin: 1.5rem 0 0.75rem;
 }
 </style>
@@ -411,7 +425,7 @@ with st.sidebar:
     uploaded_file = st.file_uploader("Upload label komposisi", type=["jpg", "png", "jpeg"], label_visibility="collapsed")
 
     st.markdown('<div class="sidebar-sep"></div>', unsafe_allow_html=True)
-    st.markdown('<div class="sidebar-section">Geometric Transform</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-section">🔧 Geometric Transform</div>', unsafe_allow_html=True)
 
     operation = st.selectbox("Operasi", ["none", "translasi", "rotasi", "scaling"], label_visibility="collapsed")
 
@@ -493,7 +507,7 @@ if uploaded_file:
 
     with col2:
         st.markdown('<p class="section-label">Processed Image</p>', unsafe_allow_html=True)
-        st.markdown('<div class="img-panel"><div class="img-panel-header"><span class="img-panel-title">Binary · OCR Ready</span><span class="img-panel-dot" style="background:#F4A261;box-shadow:0 0 8px #F4A261"></span></div><div class="img-panel-body">', unsafe_allow_html=True)
+        st.markdown('<div class="img-panel"><div class="img-panel-header"><span class="img-panel-title">Binary · OCR Ready</span><span class="img-panel-dot" style="background:#1F6F5F;box-shadow:0 0 8px #1F6F5F"></span></div><div class="img-panel-body">', unsafe_allow_html=True)
         st.image(binary, use_column_width=True)
         st.markdown('</div></div>', unsafe_allow_html=True)
 
