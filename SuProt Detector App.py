@@ -20,15 +20,14 @@ st.markdown("""
 
 /*
   COLOR PALETTE
-  --green-dark  : #1F6F5F  (primary brand, deep forest green)
-  --green-light : #6FCF97  (accent, fresh mint green)
-  --cream       : #EEEEEE  (text / surface light)
-  -- derived --
-  --bg          : #0E1A18  (very dark tinted green-black)
-  --panel       : #132320  (dark green panel)
-  --border      : #1F3530  (subtle green-tinted border)
-  --muted       : #3D6B60  (muted green-grey)
-  --soft-text   : #A8C4BE  (soft readable text)
+  --green-dark  : #1F6F5F
+  --green-light : #6FCF97
+  --cream       : #EEEEEE
+  --bg          : #0E1A18
+  --panel       : #132320
+  --border      : #1F3530
+  --muted       : #3D6B60
+  --soft-text   : #A8C4BE
 */
 
 /* ── Reset & Base ── */
@@ -47,65 +46,69 @@ html, body, [class*="css"] {
     max-width: 1300px;
 }
 
-/* ── Sidebar ── */
-[data-testid="stSidebar"] {
-    background: #0B1614;
-    border-right: 1px solid #1F3530;
+/* ── SIDEBAR — force all children visible ── */
+section[data-testid="stSidebar"] {
+    background: #0B1614 !important;
+    border-right: 1px solid #1F3530 !important;
 }
-[data-testid="stSidebar"] .block-container {
+section[data-testid="stSidebar"] > div {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+section[data-testid="stSidebar"] * {
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+section[data-testid="stSidebar"] .block-container {
     padding: 2rem 1.5rem;
 }
-[data-testid="stSidebar"] h1,
-[data-testid="stSidebar"] h2,
-[data-testid="stSidebar"] h3 {
-    font-family: 'Syne', sans-serif;
-    color: #EEEEEE;
-    font-size: 0.8rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: #3D6B60;
-    margin-bottom: 1rem;
-}
 
-/* Sidebar file uploader */
-[data-testid="stFileUploader"] {
-    background: #132320;
-    border: 1.5px dashed #1F3530;
-    border-radius: 12px;
-    padding: 1rem;
-    transition: border-color 0.2s;
-}
-[data-testid="stFileUploader"]:hover {
-    border-color: #6FCF97;
-}
-[data-testid="stFileUploader"] label {
+/* Sidebar text labels */
+section[data-testid="stSidebar"] label,
+section[data-testid="stSidebar"] p,
+section[data-testid="stSidebar"] span {
     color: #A8C4BE !important;
     font-size: 0.85rem;
 }
 
-/* Sidebar selectbox & sliders */
-[data-testid="stSelectbox"] > div > div {
+/* Sidebar file uploader area */
+section[data-testid="stSidebar"] [data-testid="stFileUploader"] {
+    background: #132320 !important;
+    border: 1.5px dashed #1F6F5F !important;
+    border-radius: 12px !important;
+    padding: 0.75rem !important;
+    display: block !important;
+    visibility: visible !important;
+}
+section[data-testid="stSidebar"] [data-testid="stFileUploader"]:hover {
+    border-color: #6FCF97 !important;
+}
+section[data-testid="stSidebar"] [data-testid="stFileUploadDropzone"] {
+    display: flex !important;
+    visibility: visible !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Sidebar selectbox */
+section[data-testid="stSidebar"] [data-testid="stSelectbox"] > div > div {
     background: #132320 !important;
     border: 1px solid #1F3530 !important;
     border-radius: 8px !important;
     color: #EEEEEE !important;
 }
-.stSlider [data-testid="stThumbValue"] {
+
+/* Sidebar sliders */
+section[data-testid="stSidebar"] .stSlider [data-testid="stThumbValue"] {
     color: #6FCF97 !important;
-    font-family: 'DM Sans', sans-serif;
     font-weight: 500;
 }
-.stSlider > div > div > div > div {
+section[data-testid="stSidebar"] .stSlider > div > div > div > div {
     background-color: #1F6F5F !important;
 }
 
 /* ── Header ── */
-.hero-header {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    margin-bottom: 0.5rem;
-}
 .hero-badge {
     display: inline-flex;
     align-items: center;
@@ -130,9 +133,7 @@ html, body, [class*="css"] {
     margin: 0 0 0.5rem 0;
     letter-spacing: -0.02em;
 }
-.hero-title span {
-    color: #6FCF97;
-}
+.hero-title span { color: #6FCF97; }
 .hero-sub {
     color: #3D6B60;
     font-size: 0.95rem;
@@ -167,7 +168,7 @@ html, body, [class*="css"] {
     background: #1F3530;
 }
 
-/* ── Image panels ── */
+/* ── Image Panels ── */
 .img-panel {
     background: #132320;
     border: 1px solid #1F3530;
@@ -269,7 +270,7 @@ html, body, [class*="css"] {
 .score-bar-fill {
     height: 100%;
     border-radius: 100px;
-    transition: width 0.5s ease;
+    transition: width 0.6s ease;
 }
 .score-num {
     font-family: 'Syne', sans-serif;
@@ -280,7 +281,7 @@ html, body, [class*="css"] {
     text-align: right;
 }
 
-/* Bar color variants — all derived from the 3-color palette */
+/* Bar color variants */
 .bar-whey        { background: linear-gradient(to right, #1F6F5F, #6FCF97); }
 .bar-casein      { background: linear-gradient(to right, #2A8A70, #EEEEEE); }
 .bar-plant       { background: linear-gradient(to right, #6FCF97, #EEEEEE); }
@@ -292,7 +293,7 @@ html, body, [class*="css"] {
     border: 1px solid #1F3530;
     border-radius: 14px;
     padding: 1.5rem;
-    font-family: 'DM Mono', 'Courier New', monospace;
+    font-family: 'Courier New', monospace;
     font-size: 0.82rem;
     color: #A8C4BE;
     line-height: 1.8;
@@ -316,11 +317,7 @@ html, body, [class*="css"] {
     border-radius: 20px;
     gap: 1rem;
 }
-.empty-icon {
-    font-size: 3.5rem;
-    filter: grayscale(0.3);
-    opacity: 0.6;
-}
+.empty-icon { font-size: 3.5rem; opacity: 0.5; }
 .empty-title {
     font-family: 'Syne', sans-serif;
     font-size: 1.25rem;
@@ -334,10 +331,10 @@ html, body, [class*="css"] {
     line-height: 1.6;
 }
 
-/* ── Info strip ── */
+/* ── Info Chips ── */
 .info-strip {
     display: flex;
-    gap: 1.5rem;
+    gap: 1rem;
     flex-wrap: wrap;
     margin-top: 1rem;
 }
@@ -354,52 +351,48 @@ html, body, [class*="css"] {
 }
 .info-chip b { color: #A8C4BE; }
 
-/* ── Columns gap ── */
-[data-testid="column"] { gap: 0; }
-
-/* Streamlit progress hide default */
-.stProgress { display: none; }
-div.row-widget.stButton > button {
-    display: none;
-}
-
-/* ── Sidebar separator ── */
+/* ── Sidebar custom labels ── */
 .sidebar-sep {
     height: 1px;
     background: #1F3530;
     margin: 1.2rem 0;
 }
 .sidebar-section {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: #3D6B60;
-    margin: 1.5rem 0 0.75rem;
+    font-family: 'Syne', sans-serif !important;
+    font-size: 0.65rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.2em !important;
+    text-transform: uppercase !important;
+    color: #6FCF97 !important;
+    margin: 1.5rem 0 0.75rem !important;
+    visibility: visible !important;
 }
+
+/* ── Misc ── */
+[data-testid="column"] { gap: 0; }
+.stProgress { display: none; }
 </style>
 """, unsafe_allow_html=True)
 
 # ===== KEYWORDS =====
 keywords = {
-    "whey": ["whey", "whey isolate", "whey concentrate", "whey protein"],
-    "casein": ["casein", "micellar casein", "calcium caseinate"],
-    "plant": ["soy protein", "pea protein", "rice protein", "vegan", "plant protein"],
+    "whey":        ["whey", "whey isolate", "whey concentrate", "whey protein"],
+    "casein":      ["casein", "micellar casein", "calcium caseinate"],
+    "plant":       ["soy protein", "pea protein", "rice protein", "vegan", "plant protein"],
     "mass_gainer": ["mass gainer", "weight gainer", "maltodextrin", "high calorie", "carbohydrate"]
 }
 
 PROTEIN_DESCRIPTIONS = {
-    "whey": "Fast-absorbing protein, ideal for post-workout recovery",
-    "casein": "Slow-release protein, optimal for overnight muscle repair",
-    "plant": "Plant-based vegan protein blend detected",
+    "whey":        "Fast-absorbing protein, ideal for post-workout recovery",
+    "casein":      "Slow-release protein, optimal for overnight muscle repair",
+    "plant":       "Plant-based vegan protein blend detected",
     "mass_gainer": "High-calorie mass & weight gainer formula"
 }
 
 BAR_COLORS = {
-    "whey": "bar-whey",
-    "casein": "bar-casein",
-    "plant": "bar-plant",
+    "whey":        "bar-whey",
+    "casein":      "bar-casein",
+    "plant":       "bar-plant",
     "mass_gainer": "bar-mass_gainer"
 }
 
@@ -409,7 +402,7 @@ def preprocess_text(text):
     return text
 
 def classify_protein(text):
-    text = preprocess_text(text)
+    text  = preprocess_text(text)
     score = {k: 0 for k in keywords}
     for category, words in keywords.items():
         for word in words:
@@ -421,13 +414,16 @@ def classify_protein(text):
 
 # ===== SIDEBAR =====
 with st.sidebar:
-    st.markdown('<div class="sidebar-section">📂 Input</div>', unsafe_allow_html=True)
-    uploaded_file = st.file_uploader("Upload label komposisi", type=["jpg", "png", "jpeg"], label_visibility="collapsed")
+    st.markdown('<p class="sidebar-section">📂 Upload Gambar</p>', unsafe_allow_html=True)
+    uploaded_file = st.file_uploader(
+        "Upload label komposisi",
+        type=["jpg", "png", "jpeg"],
+        help="Foto label nutrisi / komposisi produk protein suplemen"
+    )
 
     st.markdown('<div class="sidebar-sep"></div>', unsafe_allow_html=True)
-    st.markdown('<div class="sidebar-section">🔧 Geometric Transform</div>', unsafe_allow_html=True)
-
-    operation = st.selectbox("Operasi", ["none", "translasi", "rotasi", "scaling"], label_visibility="collapsed")
+    st.markdown('<p class="sidebar-section">🔧 Geometric Transform</p>', unsafe_allow_html=True)
+    operation = st.selectbox("Pilih Operasi", ["none", "translasi", "rotasi", "scaling"])
 
     tx, ty, angle, scale = 0, 0, 0, 1.0
     if operation == "translasi":
@@ -439,11 +435,10 @@ with st.sidebar:
         scale = st.slider("Scale Factor", 1.0, 3.0, 1.0)
 
     st.markdown('<div class="sidebar-sep"></div>', unsafe_allow_html=True)
-    st.markdown('<div class="sidebar-section">🎨 Image Processing</div>', unsafe_allow_html=True)
-
+    st.markdown('<p class="sidebar-section">🎨 Image Processing</p>', unsafe_allow_html=True)
     brightness = st.slider("Brightness", -100, 100, 0)
-    contrast   = st.slider("Contrast", 1.0, 3.0, 1.0)
-    thresh     = st.slider("Threshold", 0, 255, 127)
+    contrast   = st.slider("Contrast",   1.0, 3.0, 1.0)
+    thresh     = st.slider("Threshold",  0, 255, 127)
     blur_k     = st.slider("Blur (Gaussian)", 1, 15, 1)
 
 # ===== HEADER =====
@@ -459,44 +454,51 @@ st.markdown("""
 # ===== MAIN =====
 if uploaded_file:
     image = Image.open(uploaded_file)
-    img = np.array(image)
+    img   = np.array(image)
 
-    # ── Process ──
-    proc_img = img.copy()
+    # ── Geometric transform ──
+    proc_img   = img.copy()
     rows, cols = proc_img.shape[:2]
 
     if operation == "translasi":
-        M = np.float32([[1, 0, tx], [0, 1, ty]])
+        M        = np.float32([[1, 0, tx], [0, 1, ty]])
         proc_img = cv2.warpAffine(proc_img, M, (cols, rows))
     elif operation == "rotasi":
-        M = cv2.getRotationMatrix2D((cols / 2, rows / 2), angle, 1)
+        M        = cv2.getRotationMatrix2D((cols / 2, rows / 2), angle, 1)
         proc_img = cv2.warpAffine(proc_img, M, (cols, rows))
     elif operation == "scaling":
         proc_img = cv2.resize(proc_img, None, fx=scale, fy=scale)
 
+    # ── Image processing ──
     proc = cv2.convertScaleAbs(proc_img, alpha=contrast, beta=brightness)
     gray = cv2.cvtColor(proc, cv2.COLOR_RGB2GRAY)
 
     if blur_k > 1:
         blur_k = blur_k if blur_k % 2 != 0 else blur_k + 1
-        gray = cv2.GaussianBlur(gray, (blur_k, blur_k), 0)
+        gray   = cv2.GaussianBlur(gray, (blur_k, blur_k), 0)
 
-    _, binary = cv2.threshold(gray, thresh, 255, cv2.THRESH_BINARY)
-    text = pytesseract.image_to_string(binary)
+    _, binary     = cv2.threshold(gray, thresh, 255, cv2.THRESH_BINARY)
+    text          = pytesseract.image_to_string(binary)
     result, score = classify_protein(text)
 
-    # ── Image Columns ──
+    # ── Image columns ──
     col1, col2 = st.columns(2, gap="large")
 
     with col1:
         st.markdown('<p class="section-label">Original Image</p>', unsafe_allow_html=True)
-        st.markdown('<div class="img-panel"><div class="img-panel-header"><span class="img-panel-title">Input</span><span class="img-panel-dot"></span></div><div class="img-panel-body">', unsafe_allow_html=True)
+        st.markdown(
+            '<div class="img-panel">'
+            '<div class="img-panel-header">'
+            '<span class="img-panel-title">Input</span>'
+            '<span class="img-panel-dot"></span>'
+            '</div><div class="img-panel-body">',
+            unsafe_allow_html=True
+        )
         st.image(image, use_column_width=True)
         st.markdown('</div></div>', unsafe_allow_html=True)
 
-        # File info chips
         file_size = round(uploaded_file.size / 1024, 1)
-        w, h = image.size
+        w, h      = image.size
         st.markdown(f"""
         <div class="info-strip">
             <div class="info-chip">📐 <b>{w}×{h}</b> px</div>
@@ -507,7 +509,14 @@ if uploaded_file:
 
     with col2:
         st.markdown('<p class="section-label">Processed Image</p>', unsafe_allow_html=True)
-        st.markdown('<div class="img-panel"><div class="img-panel-header"><span class="img-panel-title">Binary · OCR Ready</span><span class="img-panel-dot" style="background:#1F6F5F;box-shadow:0 0 8px #1F6F5F"></span></div><div class="img-panel-body">', unsafe_allow_html=True)
+        st.markdown(
+            '<div class="img-panel">'
+            '<div class="img-panel-header">'
+            '<span class="img-panel-title">Binary · OCR Ready</span>'
+            '<span class="img-panel-dot" style="background:#1F6F5F;box-shadow:0 0 8px #1F6F5F"></span>'
+            '</div><div class="img-panel-body">',
+            unsafe_allow_html=True
+        )
         st.image(binary, use_column_width=True)
         st.markdown('</div></div>', unsafe_allow_html=True)
 
@@ -523,7 +532,7 @@ if uploaded_file:
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # ── Results ──
+    # ── Results & Score ──
     res_col, score_col = st.columns([1, 1], gap="large")
 
     with res_col:
@@ -539,11 +548,10 @@ if uploaded_file:
 
     with score_col:
         st.markdown('<p class="section-label">Confidence Score</p>', unsafe_allow_html=True)
-        max_score = max(score.values()) if max(score.values()) > 0 else 1
         for k, v in score.items():
-            bar_pct = int((v / 5) * 100)
+            bar_pct   = int((v / 5) * 100)
             bar_class = BAR_COLORS.get(k, "bar-whey")
-            label = k.replace("_", " ").title()
+            label     = k.replace("_", " ").title()
             st.markdown(f"""
             <div class="score-row">
                 <div class="score-label">{label}</div>
@@ -562,11 +570,10 @@ if uploaded_file:
     st.markdown(f'<div class="ocr-box">{clean_text}</div>', unsafe_allow_html=True)
 
 else:
-    # ── Empty State ──
     st.markdown("""
     <div class="empty-state">
         <div class="empty-icon">🥛</div>
         <div class="empty-title">Belum ada gambar</div>
-        <div class="empty-sub">Upload foto label komposisi suplemen protein dari sidebar untuk memulai analisis OCR otomatis.</div>
+        <div class="empty-sub">Upload foto label komposisi suplemen protein dari sidebar kiri untuk memulai analisis OCR otomatis.</div>
     </div>
     """, unsafe_allow_html=True)
