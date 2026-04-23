@@ -422,7 +422,7 @@ def classify_protein(text):
 
 # ===== SIDEBAR =====
 with st.sidebar:
-    t.markdown("""
+    st.markdown("""
 <div style="text-align:center; color:#6FCF97; font-size:14px; margin-top:10px;">
 ⬅️ Gunakan panel di sebelah kiri untuk upload gambar
 </div>
