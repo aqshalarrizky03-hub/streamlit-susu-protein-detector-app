@@ -431,6 +431,10 @@ button[data-testid="baseButton-headerNoPadding"],
     margin: 1rem 0;
 }
 </style>
+
+<div class="top-credit">
+    Inspirasi dari <b>Muhammad Aqshal Arrizky</b> — 065123201 — GAB D
+</div>
 """, unsafe_allow_html=True)
 
 # ===== DATA =====
